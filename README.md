@@ -123,15 +123,15 @@ Replace YOUR_SITEKEY_HERE and YOUR_API_KEY_HERE with your actual credentials fro
 
 ⚠ Why the PHP goes on the NEXT page: SoSci executes PHP when building a page, before the user has submitted the form. So value('A702_01') can only be read after the form has been submitted — i.e., on the following page.
 
-Alternative to just blocking the next and back button: Falg if participant was a bot by creating a new item (e.e. A702_02) and set the value 1 everytime it is a bot. Display an error message (create a new text question, here names A703). And go back so the person can repeat the catpcha check.
+Alternative to just blocking the next and back button: Falg if participant was a bot by creating a new item (e.e. A702_02) and set the value 1 everytime it is a bot and send them to an error page.
 
 // Block navigation if verification failed not possible to continue (klick next page)
 if ($result['success'] == false) {
     put('A702_02', 1); // flag in dataset (bot = 1)
-    question('A703'); // error message 
-    goToPage(friendlycaptcha); // repeat captcha
+    goToPage(error); // repeat captcha
 }
 
+⚠ Take care: SoSciSurvey only runs sendJSON() twice. As a result the thrid time answering the friendly captcha bots can pass on. They therefore should be blocked after the second trial. 
 
 ℹ You can also paste your own PHP code in the if($result['success'] == false) {} block. The one above stops the page from showing the next or back button.
 
