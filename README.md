@@ -123,7 +123,7 @@ Replace YOUR_SITEKEY_HERE and YOUR_API_KEY_HERE with your actual credentials fro
 
 ⚠ Why the PHP goes on the NEXT page: SoSci executes PHP when building a page, before the user has submitted the form. So value('A702_01') can only be read after the form has been submitted — i.e., on the following page.
 
-Alternative to just blocking the next and back button: Falg if participant was a bot by creating a new item (e.e. A702_02) and set the value 1 everytime it is a bot and send them to an error page.
+Alternative to just blocking the next and back button: Flag if participant was a bot by creating a new item (e.e. A702_02) and set the value 1 everytime it is a bot and send them to an error page.
 
 // Block navigation if verification failed not possible to continue (klick next page)
 if ($result['success'] == false) {
