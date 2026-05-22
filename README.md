@@ -1,15 +1,15 @@
-<b>How to Embed Friendly Captcha in SoSci Survey</b>
+<h1>How to Embed Friendly Captcha in SoSci Survey</h1>
 
 A Step-by-Step Integration Guide: Sarah Foeller
+<br>
+<br>
 
-
-
-Overview
-
-Friendly Captcha a DSGVO-compliant bot protection service developed by a German company. It uses a proof-of-work mechanism that runs invisibly in the user's browser — real participants see nothing, and bots are blocked before they can submit. Unlike Google reCAPTCHA, no personal data (IP address, browser fingerprint) is transmitted to third-party servers located outside of the EU.
-This guide explains how to embed Friendly Captcha into a SoSci Survey project. The integration requires no native SoSci plugin — instead it uses a combination of an HTML text 
-
-STEP 1	Create a Friendly Captcha Account
+<h3>Overview</h3>
+<p>Friendly Captcha a DSGVO-compliant bot protection service developed by a German company. It uses a proof-of-work mechanism that runs invisibly in the user's browser — real participants see nothing, and bots are blocked before they can submit. Unlike Google reCAPTCHA, no personal data (IP address, browser fingerprint) is transmitted to third-party servers located outside of the EU.
+This guide explains how to embed Friendly Captcha into a SoSci Survey project. The integration requires no native SoSci plugin — instead it uses a combination of an HTML text.</p>
+<br>
+<h3>Step by Step</h3>
+<b>STEP 1	Create a Friendly Captcha Account</b>
 Obtain your API credentials from the Friendly Captcha dashboard
 
 Go to https://app.friendlycaptcha.eu/dashboard and register for a free account.
@@ -18,7 +18,7 @@ The free plan allows up to 1,000 verification requests per month, which is suffi
 •	Sitekey — a public identifier placed in your HTML widget. It tells Friendly Captcha which account to use.
 •	API Key — a secret key used server-side in your PHP code to verify tokens. Never share or expose this key publicly.
 
-STEP 2	Add the Captcha Widget (HTML Text Element)
+<b>STEP 2	Add the Captcha Widget (HTML Text Element)</b>
 Embed the Friendly Captcha widget and token-copy script on your survey page
 
 In SoSci Survey, create a new HTML-Code text element (I recommend adding it in a question block) and then drag it to the survey page where you want to check for bots.
@@ -76,8 +76,9 @@ Now use this code instead, it loads the java script from soscisurvey instead of 
 
 Replace StressWork2Anmeldung with your actual project link.
 
+<br>
+<b>STEP 3	Create the Internal Variable Question in SoSciSurvey</b>
 
-STEP 3	Create the Internal Variable Question in SoSciSurvey
 Set up the hidden storage field that transfers the captcha token to PHP
 
 In SoSci Survey create a new question block and create a internal variable, go to: Fragenkatalog → Frage hinzufügen → Funktionale Bausteine → Interne Variablen
@@ -93,7 +94,9 @@ Your survey page should now contain, in this order:
 1.	HTML-Code text element: widget loading scripts + captcha div + JavaScript token-copy script
 2.	Internal variable question (A702 / CAPT) — dragged onto this page
 
-STEP 4	Add PHP Verification on the Next Page
+<br>
+<b>STEP 4	Add PHP Verification on the Next Page</b>
+
 Verify the token with Friendly Captcha's API and block bots
 
 On the page immediately following your captcha page, add a PHP text element with the following code:
@@ -141,8 +144,17 @@ While testing, add these two lines at the end of your PHP block to inspect the v
 debug($captcha_response); // Should show a long token string starting with AQEA... or AQQA...
 debug($result);           // Should show [success][true] for a real person
 
- 
-<b>How It Works</b>
+<br>
+<h3>What Appears in Your Dataset</h3>
+
+After data collection, the column labelled CAPT (or whatever item label you chose) will contain the raw Friendly Captcha token string for each submission. Example:
+
+AQQA.8ZFE5oTTEfRjBlMxg6y1p_W2hLQjMVe7JsAFKx-nFX9OUtwkf5bEdyw...
+
+A valid token is long (several hundred characters) and starts with AQEA or AQQA. You can use this to manually identify and exclude any dataset rows where the token is empty or suspiciously short — which would indicate the captcha was bypassed.
+
+<br>
+<h3>Summary: How It Works</h3>
 The full flow when a real participant opens the captcha page:
 
 1.	Widget loads and solves puzzle. When the page opens, the Friendly Captcha widget silently runs a proof-of-work computation in the user's browser. This takes a few seconds and requires no user interaction.
@@ -152,7 +164,8 @@ The full flow when a real participant opens the captcha page:
 5.	PHP verifies on the next page. On page 2, the PHP code reads the token via value('A702_01') and sends it to Friendly Captcha's EU API using sendJSON(). The API responds with [success][true] for real humans.
 6.	Bots are redirected. If verification fails (bot, invalid token, or expired token), the participant is silently redirected to the 'bot' page and cannot continue.
 
-<b>Troubleshooting: Error / Symptom	Cause & Fix</b>
+<br>
+<h3>Troubleshooting: Error / Symptom	Cause & Fix</h3>
 
 response_invalid (error 40501)	
 The token sent was empty or a literal string. Check: 
@@ -172,11 +185,3 @@ Same cause as above — PHP is running on the same page as the form. Move the PH
 
 sendJSON() returns false	
 Network error — SoSci could not reach the Friendly Captcha API. The isset() check in the production code handles this gracefully by allowing participants through rather than blocking everyone.
-
-<b>What Appears in Your Dataset</b>
-After data collection, the column labelled CAPT (or whatever item label you chose) will contain the raw Friendly Captcha token string for each submission. Example:
-
-AQQA.8ZFE5oTTEfRjBlMxg6y1p_W2hLQjMVe7JsAFKx-nFX9OUtwkf5bEdyw...
-
-A valid token is long (several hundred characters) and starts with AQEA or AQQA. You can use this to manually identify and exclude any dataset rows where the token is empty or suspiciously short — which would indicate the captcha was bypassed.
-
