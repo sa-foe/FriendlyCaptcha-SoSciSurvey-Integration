@@ -145,23 +145,35 @@ debug($result);           // Should show [success][true] for a real person
 <b>How It Works</b>
 The full flow when a real participant opens the captcha page:
 
-3.	Widget loads and solves puzzle. When the page opens, the Friendly Captcha widget silently runs a proof-of-work computation in the user's browser. This takes a few seconds and requires no user interaction.
-4.	Token is generated. Once complete, the widget fires an frc:widget.complete event and stores a signed token string (e.g. AQQA....) in a hidden form field.
-5.	JavaScript copies token to SoSci. The event listener in your HTML block catches this event and writes the token into the hidden input field of the internal variable (A702_01).
-6.	Form is submitted. When the participant clicks "Weiter", SoSci submits the form including the token stored in A702_01. This token is now saved in the dataset.
-7.	PHP verifies on the next page. On page 2, the PHP code reads the token via value('A702_01') and sends it to Friendly Captcha's EU API using sendJSON(). The API responds with [success][true] for real humans.
-8.	Bots are redirected. If verification fails (bot, invalid token, or expired token), the participant is silently redirected to the 'bot' page and cannot continue.
+1.	Widget loads and solves puzzle. When the page opens, the Friendly Captcha widget silently runs a proof-of-work computation in the user's browser. This takes a few seconds and requires no user interaction.
+2.	Token is generated. Once complete, the widget fires an frc:widget.complete event and stores a signed token string (e.g. AQQA....) in a hidden form field.
+3.	JavaScript copies token to SoSci. The event listener in your HTML block catches this event and writes the token into the hidden input field of the internal variable (A702_01).
+4.	Form is submitted. When the participant clicks "Weiter", SoSci submits the form including the token stored in A702_01. This token is now saved in the dataset.
+5.	PHP verifies on the next page. On page 2, the PHP code reads the token via value('A702_01') and sends it to Friendly Captcha's EU API using sendJSON(). The API responds with [success][true] for real humans.
+6.	Bots are redirected. If verification fails (bot, invalid token, or expired token), the participant is silently redirected to the 'bot' page and cannot continue.
 
-<b>Troubleshooting</b>
+<b>Troubleshooting: Error / Symptom	Cause & Fix</b>
 
-Error / Symptom	Cause & Fix
-response_invalid (error 40501)	The token sent was empty or a literal string. Check: (1) that value() is called on the NEXT page, not the same page. (2) that A702_01 is dragged onto the captcha page. (3) no quotes around the variable in the 'response' field.
-value('A702_01') = empty string	The JavaScript event listener fired before the internal variable's hidden input field was rendered. Ensure the internal variable question is placed on the page BEFORE the JS block, or use a DOMContentLoaded wrapper.
-Die Variable A702_01 gibt es nicht	You used value() on the same page as the widget. Move all PHP verification to the next page.
-Die Variable A702_01 wurde auf keiner vorhergehenden Seite abgefragt	Same cause as above — PHP is running on the same page as the form. Move the PHP block to the next page.
+response_invalid (error 40501)	
+The token sent was empty or a literal string. Check: 
+    (1) that value() is called on the NEXT page, not the same page. 
+    (2) that A702_01 is dragged onto the captcha page. 
+    (3) no quotes around the variable in the 'response' field.
+
+value('A702_01') = empty string	
+The JavaScript event listener fired before the internal variable's hidden input field was rendered. Ensure the internal variable question is placed on the page BEFORE the JS block, or use a DOMContentLoaded wrapper.
+
+Die Variable A702_01 gibt es nicht	
+You used value() on the same page as the widget. Move all PHP verification to the next page.
+
+Die Variable A702_01 wurde auf keiner vorhergehenden Seite abgefragt	
+Same cause as above — PHP is running on the same page as the form. Move the PHP block to the next page.
 [success][false] for real participants	The token may have expired (tokens are valid for ~2 minutes). If participants take too long to click 'Weiter', the token times out. Consider only blocking if isset($result['success']) is true.
-sendJSON() returns false	Network error — SoSci could not reach the Friendly Captcha API. The isset() check in the production code handles this gracefully by allowing participants through rather than blocking everyone.
-What Appears in Your Dataset
+
+sendJSON() returns false	
+Network error — SoSci could not reach the Friendly Captcha API. The isset() check in the production code handles this gracefully by allowing participants through rather than blocking everyone.
+
+<b>What Appears in Your Dataset</b>
 After data collection, the column labelled CAPT (or whatever item label you chose) will contain the raw Friendly Captcha token string for each submission. Example:
 
 AQQA.8ZFE5oTTEfRjBlMxg6y1p_W2hLQjMVe7JsAFKx-nFX9OUtwkf5bEdyw...
