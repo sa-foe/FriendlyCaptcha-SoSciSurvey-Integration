@@ -10,10 +10,6 @@
   Google reCAPTCHA, no personal data (IP address, browser fingerprint) is transmitted to
   third-party servers located outside of the EU.</p>
 
-  <p>This guide explains how to embed Friendly Captcha into a SoSci Survey project. The
-  integration requires no native SoSci plugin — instead it uses a combination of an HTML
-  text.</p>
-
   <h3>Short Guide</h3>
 
   <p>The implementation of Friendly Captcha now embedded in SoSci Survey:</p>
