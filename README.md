@@ -3,10 +3,24 @@
 A Step-by-Step Integration Guide: Sarah Foeller
 <br>
 <br>
-
 <h3>Overview</h3>
 <p>Friendly Captcha a DSGVO-compliant bot protection service developed by a German company. It uses a proof-of-work mechanism that runs invisibly in the user's browser — real participants see nothing, and bots are blocked before they can submit. Unlike Google reCAPTCHA, no personal data (IP address, browser fingerprint) is transmitted to third-party servers located outside of the EU.
 This guide explains how to embed Friendly Captcha into a SoSci Survey project. The integration requires no native SoSci plugin — instead it uses a combination of an HTML text.</p>
+<br>
+<h3>Short Guide</h3>
+<p>The implementation of Friendly Captcha  now embedded in  SoSci Survey:</p>
+<p>(English)</p>
+<li>questions → add question</li>
+<li>chose „Captcha“</li>
+<li>type → „FriendlyCaptcha“ </li>
+<li>enter Sitekey and API-Key (see step 1)</li>
+<li>pull Captcha on desired questionnaire page</li>
+<p>(German)</p>
+<li>Im Fragenkatalog → Frage hinzufügen.</li>
+<li>Fragetyp „Captcha“ auswählen.</li>
+<li>Bei Art des Captchas → „FriendlyCaptcha“ auswählen.</li>
+<li>Deinen Sitekey und API-Key eintragen (step 1).</li>
+<li>Diese Captcha-Frage auf die gewünschte Fragebogenseite ziehen.</li>
 <br>
 <h3>Step by Step</h3>
 <b>STEP 1	Create a Friendly Captcha Account</b>
@@ -15,8 +29,8 @@ Obtain your API credentials from the Friendly Captcha dashboard
 Go to https://app.friendlycaptcha.eu/dashboard and register for a free account.
 
 The free plan allows up to 1,000 verification requests per month, which is sufficient for most academic studies. After registration, you need two credentials:
-•	Sitekey — a public identifier placed in your HTML widget. It tells Friendly Captcha which account to use.
-•	API Key — a secret key used server-side in your PHP code to verify tokens. Never share or expose this key publicly.
+1. Sitekey — a public identifier placed in your HTML widget. It tells Friendly Captcha which account to use.
+2. API Key — a secret key used server-side in your PHP code to verify tokens. Never share or expose this key publicly.
 
 <b>STEP 2	Add the Captcha Widget (HTML Text Element)</b>
 Embed the Friendly Captcha widget and token-copy script on your survey page
